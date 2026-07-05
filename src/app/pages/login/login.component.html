@@ -46,44 +46,19 @@
     @if (tab() === 'register') {
       <form class="auth-form" (ngSubmit)="onRegister()">
 
-        <!-- DNI opcional -->
-        <div class="auth-field">
-          <label class="auth-label" for="regDni">
-            DNI
-            <span class="badge-optional">Opcional — autocompleta tu nombre</span>
-          </label>
-          <div class="dni-row">
-            <input id="regDni" class="auth-input" [class.input-error]="errors()['dni']"
-              [class.input-success]="dniFound()"
-              type="text" inputmode="numeric" maxlength="8" placeholder="12345678"
-              [(ngModel)]="regDni" name="regDni" (input)="onDniInput()" />
-            @if (dniLoading()) { <span class="dni-spinner"></span> }
-            @if (dniFound()) { <span class="dni-check"><i class="fi fi-rs-check"></i></span> }
-          </div>
-          @if (errors()['dni']) { <p class="auth-error">{{ errors()['dni'] }}</p> }
-        </div>
-
         <!-- Nombre y Apellidos -->
         <div class="auth-row">
           <div class="auth-field">
-            <label class="auth-label" for="regNombre">
-              Nombre
-              @if (dniFound()) { <span class="badge-auto">Auto</span> }
-            </label>
+            <label class="auth-label" for="regNombre">Nombre</label>
             <input id="regNombre" class="auth-input" [class.input-error]="errors()['nombre']"
-              [class.input-success]="dniFound()"
               type="text" autocomplete="given-name" placeholder="Juan"
               [(ngModel)]="regNombre" name="regNombre" />
             @if (errors()['nombre']) { <p class="auth-error">{{ errors()['nombre'] }}</p> }
           </div>
 
           <div class="auth-field">
-            <label class="auth-label" for="regApellidos">
-              Apellidos
-              @if (dniFound()) { <span class="badge-auto">Auto</span> }
-            </label>
+            <label class="auth-label" for="regApellidos">Apellidos</label>
             <input id="regApellidos" class="auth-input" [class.input-error]="errors()['apellidos']"
-              [class.input-success]="dniFound()"
               type="text" autocomplete="family-name" placeholder="Pérez García"
               [(ngModel)]="regApellidos" name="regApellidos" />
             @if (errors()['apellidos']) { <p class="auth-error">{{ errors()['apellidos'] }}</p> }

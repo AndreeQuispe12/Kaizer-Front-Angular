@@ -25,7 +25,6 @@ export class LoginComponent {
   loginPassword = '';
 
   // Register fields
-  regDni      = '';
   regNombre   = '';
   regApellidos = '';
   regEmail    = '';
@@ -34,39 +33,13 @@ export class LoginComponent {
   // State
   error      = signal<string | null>(null);
   submitting = signal(false);
-  dniLoading = signal(false);
-  dniFound   = signal(false);
   errors     = signal<Record<string, string>>({});
 
   setTab(t: Tab) {
     this.tab.set(t);
     this.error.set(null);
     this.errors.set({});
-    this.dniFound.set(false);
-    this.regDni = ''; this.regNombre = ''; this.regApellidos = '';
-  }
-
-  async onDniInput() {
-    const dni = this.regDni.replace(/\D/g, '').slice(0, 8);
-    this.regDni = dni;
-    this.dniFound.set(false);
-    if (dni.length === 8) {
-      this.dniLoading.set(true);
-      try {
-        const res = await this.backend.lookupDocument(dni);
-        const parts = res.nombre.split(' ');
-        this.regNombre   = parts.slice(2).join(' ');
-        this.regApellidos = parts.slice(0, 2).join(' ');
-        this.dniFound.set(true);
-        const e = { ...this.errors() }; delete e['dni']; this.errors.set(e);
-      } catch {
-        this.errors.set({ ...this.errors(), dni: 'DNI no encontrado' });
-      } finally {
-        this.dniLoading.set(false);
-      }
-    } else {
-      if (!this.dniFound()) { this.regNombre = ''; this.regApellidos = ''; }
-    }
+    this.regNombre = ''; this.regApellidos = '';
   }
 
   async onLogin() {
@@ -100,12 +73,9 @@ export class LoginComponent {
     this.error.set(null);
     this.submitting.set(true);
     try {
-      await this.auth.register(this.regEmail, this.regPassword);
+      await this.auth.register(this.regNombre, this.regApellidos, this.regEmail, this.regPassword);
       const nombreCompleto = `${this.regNombre.trim()} ${this.regApellidos.trim()}`;
-      try {
-        await this.backend.updateProfile({ nombre: nombreCompleto });
-        this.auth.setNombre(nombreCompleto);
-      } catch { /* non-fatal */ }
+      this.auth.setNombre(nombreCompleto);
       void this.router.navigate(['/'], { replaceUrl: true });
     } catch {
       this.error.set('No se pudo crear la cuenta. Intenta con otro email.');

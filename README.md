@@ -97,12 +97,23 @@ src/
 - **Interceptor automático** — Inyecta `Authorization: Bearer <token>` en todas las peticiones
 - **Guards de ruta** — `authGuard` (usuario autenticado), `adminGuard` (solo ADMIN)
 
-**Flujo:**
-1. Usuario hace login → POST `/api/auth/login`
-2. Backend devuelve `{ token }`
-3. Token se guarda en localStorage y se decodifica
-4. Interceptor lo añade automáticamente a las peticiones
-5. Guards protegen rutas (`/checkout`, `/profile`, `/admin`)
+**Flujo de registro:**
+1. Usuario ingresa: Nombre, Apellidos, Email, Contraseña (sin DNI)
+2. Click "Crear cuenta" → POST `/api/auth/register`
+3. Backend valida y crea usuario
+4. Token se guarda en localStorage
+5. Usuario redirigido a home
+
+**Flujo de login:**
+1. Usuario ingresa Email y Contraseña
+2. Click "Ingresar" → POST `/api/auth/login`
+3. Backend valida credenciales
+4. Token se guarda en localStorage
+5. Interceptor lo añade automáticamente a peticiones futuras
+6. Guards protegen rutas (`/checkout`, `/profile`, `/admin`)
+
+**Nota sobre DNI/RUC:**
+El DNI/RUC se solicita **en el checkout** (no en registro) para autocompletar nombre/razón social con Decolecta (RENIEC/SUNAT).
 
 ## 🗂️ Variables de entorno
 

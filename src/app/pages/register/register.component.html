@@ -1,0 +1,43 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h2 class="auth-title">Registro</h2>
+    <form class="auth-form" (ngSubmit)="onSubmit()">
+      <div class="auth-field">
+        <label class="auth-label" for="email">Email</label>
+        <input
+          id="email"
+          class="auth-input"
+          type="email"
+          autocomplete="email"
+          placeholder="tu@email.com"
+          [(ngModel)]="email"
+          name="email"
+        />
+        @if (showEmailError()) {
+          <p class="auth-error">Email requerido</p>
+        }
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" for="password">Password</label>
+        <input
+          id="password"
+          class="auth-input"
+          type="password"
+          autocomplete="new-password"
+          placeholder="mínimo 8 caracteres"
+          [(ngModel)]="password"
+          name="password"
+        />
+        @if (showPasswordError()) {
+          <p class="auth-error">Password mínimo 8 caracteres</p>
+        }
+      </div>
+      @if (error()) {
+        <p class="auth-error">{{ error() }}</p>
+      }
+      <button class="hero-button auth-button" type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Creando...' : 'Crear cuenta' }}
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/Kaizer-Front-Angular",
+  "outputDirectory": "dist/Kaizer-Front-Angular/browser",
   "rewrites": [
     {
       "source": "/(.*)",

@@ -49,12 +49,18 @@ npm start
 ### Build para producción
 
 ```bash
-# Compilar (output en dist/Kaizer-Front-Angular/)
+# Compilar
 npm run build
 
 # Servir localmente la build de producción
 npm run serve
 ```
+
+> ⚠️ **Importante (Angular 22):** el builder `@angular/build:application` genera
+> el output dentro de una **subcarpeta `browser/`**:
+> `dist/Kaizer-Front-Angular/browser/`. El `index.html` y los assets están ahí,
+> **no** en `dist/Kaizer-Front-Angular/` directamente. Por eso el `outputDirectory`
+> de Vercel debe apuntar a `dist/Kaizer-Front-Angular/browser` (ver sección Despliegue).
 
 ### Tests
 
@@ -146,11 +152,34 @@ Ver `.env.example` para referencia completa.
 
 ### Vercel (recomendado)
 
+Desplegado en producción: `https://kaizer-front-angular.vercel.app`
+
 1. Push a GitHub
 2. Conecta tu repo en [vercel.com](https://vercel.com)
 3. Vercel detecta `vercel.json` automáticamente
 4. Deploy → se compila y publica
 5. Edita `index.html` en la interfaz de Vercel o redeploy después de cambiar `window.__env`
+
+El `vercel.json` de este repo:
+
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/Kaizer-Front-Angular/browser",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+
+> ⚠️ **Clave del despliegue:** el `outputDirectory` **debe** terminar en
+> `/browser`, porque Angular 22 emite ahí el `index.html`. Apuntar a
+> `dist/Kaizer-Front-Angular` (sin `/browser`) produce un **404 NOT_FOUND** de
+> Vercel, ya que no encuentra el `index.html`.
+>
+> Si usas **Root Directory** en Vercel (repo con varios proyectos), déjalo como el
+> nombre de la carpeta del frontend (ej. `Kaizer-Front-Angular`). Si el repo ya
+> **es** el frontend, déjalo **vacío**.
 
 ### Netlify
 
@@ -160,9 +189,14 @@ Ver `.env.example` para referencia completa.
 4. Deploy → se compila y publica
 5. Edita `index.html` en la interfaz de Netlify o redeploy
 
+> El `publish` de `netlify.toml` también debe apuntar a
+> `dist/Kaizer-Front-Angular/browser` por la misma razón.
+
 ### Configuración importante
 
 Asegúrate de que:
+- El **`outputDirectory` / `publish` apunta a `dist/Kaizer-Front-Angular/browser`**
+  (subcarpeta que genera Angular 22)
 - El **fallback SPA** está configurado (redirige todas las rutas a `index.html`)
   - Vercel: `vercel.json` ✓
   - Netlify: `netlify.toml` ✓

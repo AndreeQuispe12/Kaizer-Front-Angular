@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = "dist/Kaizer-Front-Angular"
+  publish = "dist/Kaizer-Front-Angular/browser"
 
 [[redirects]]
   from = "/*"
